@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Moving Data : the testing framework developed for my final year project at the University of St Andrews" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Moving Data</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/optiminimalist/movingdata">View on GitHub</a>
+
+          <h1 id="project_title">Moving Data</h1>
+          <h2 id="project_tagline">the testing framework developed for my final year project at the University of St Andrews</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/optiminimalist/movingdata/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/optiminimalist/movingdata/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="location-location-location-data-intensive-distributed-computing-in-the-cloud" class="anchor" href="#location-location-location-data-intensive-distributed-computing-in-the-cloud"><span class="octicon octicon-link"></span></a>Location, Location, Location: Data-Intensive Distributed Computing in the Cloud.</h1>
+
+<p>Michael Luckeneder, Adam Barker. <a href="http://arxiv.org/abs/1309.6452">Paper</a> to appear in <a href="http://2013.cloudcom.org/">IEEE CloudCom 2013</a>. </p>
+
+<h2>
+<a name="technology-overview" class="anchor" href="#technology-overview"><span class="octicon octicon-link"></span></a>Technology overview</h2>
+
+<p><strong>Amazon AWS</strong> is used to host the workflow orchestrator and run the analysis tools.</p>
+
+<p><strong>PlanetLab</strong> runs simple RESTful web services which receive an image, write it to the disk and retransmit it again. </p>
+
+<h2>
+<a name="required-tools" class="anchor" href="#required-tools"><span class="octicon octicon-link"></span></a>Required tools</h2>
+
+<h3>
+<a name="aws-toolkit" class="anchor" href="#aws-toolkit"><span class="octicon octicon-link"></span></a>AWS toolkit</h3>
+
+<p>To set up the Amazon AWS toolkit, follow the official guide: <a href="http://aws.amazon.com/developertools/351">http://aws.amazon.com/developertools/351</a> and configure the toolkit with your AWS account credentials.</p>
+
+<h3>
+<a name="planetlab" class="anchor" href="#planetlab"><span class="octicon octicon-link"></span></a>PlanetLab</h3>
+
+<p>In order to set up the PlanetLab toolkit, follow the official getting started guide: <a href="https://www.planet-lab.org/doc/guides/user">https://www.planet-lab.org/doc/guides/user</a></p>
+
+<h3>
+<a name="python" class="anchor" href="#python"><span class="octicon octicon-link"></span></a>Python</h3>
+
+<p>Install <a href="http://www.python.org">Python 2.7.3</a>, <a href="https://pypi.python.org/pypi/pip">pip</a> and <a href="http://www.virtualenv.org/en/latest/">virtualenv</a></p>
+
+<h2>
+<a name="setup" class="anchor" href="#setup"><span class="octicon octicon-link"></span></a>Setup</h2>
+
+<h3>
+<a name="python-1" class="anchor" href="#python-1"><span class="octicon octicon-link"></span></a>Python</h3>
+
+<p>Set up a new <em>virtualenv</em> by following the getting started guide on <a href="http://www.virtualenv.org/en/latest/">virtualenv</a> and then run <code>pip install -r requirements.txt</code>. This will install all requirements for the project.</p>
+
+<p>Then take some time to edit <code>config.py</code> and put in your AWS credentials and an API key from <a href="http://ipinfodb.com/ip_location_api.php">ipinfodb</a>.</p>
+
+<h3>
+<a name="aws" class="anchor" href="#aws"><span class="octicon octicon-link"></span></a>AWS</h3>
+
+<p>Follow the Amazon AWS console instructions to create a key pair and a security group. The key pair and security group have to be copied to all AWS regions.</p>
+
+<p>Configure the parameters in <code>script/add_keypair</code> and then, from the main directory, run <code>sh scripts/add_keypair</code>. This will copy the keypair to all regions</p>
+
+<p>Similarly, the command <code>python script/copy_security_groups.py</code> can be used to copy all security groups to all AWS regions.</p>
+
+<h3>
+<a name="planetlab-1" class="anchor" href="#planetlab-1"><span class="octicon octicon-link"></span></a>PlanetLab</h3>
+
+<p>The PlanetLab setup files live in <code>eg/planetlab</code>. </p>
+
+<p>The file <code>eg/planetlab/nodes.txt</code> contains a list of PlanetLab nodes where the test web service workflows can be executed. When the project was started, a command was used to retrieve this list of nodes from the PlanetLab <a href="http://comon.cs.princeton.edu">comon</a> service. However, as of March 2013, this service does not respond to requests and thus the list of live nodes cannot be queried anymore. Since PlanetLab nodes tend to go offline, it might be possible that none of the nodes defined in <code>nodes.txt</code> work.</p>
+
+<p>The script file <code>eg/planetlab/pl.sh</code> is used to control the web services hosted on PlanetLab. </p>
+
+<p><code>sh eg/planetlab/pl.sh deploy</code> copies the file in <code>eg/planetlab/cs4098/server.py</code> to every node defined in <code>nodes.txt</code>.</p>
+
+<p><code>sh eg/planetlab/pl.sh install</code> installs the Python dependencies on all nodes.</p>
+
+<p><code>sh eg/planetlab/pl.sh start</code> starts the web service on every node (accessible via HTTP on port 31415).</p>
+
+<p><code>sh eg/planetlab/pl.sh stop</code> stops the web service on every node.</p>
+
+<h2>
+<a name="workflow-analysis" class="anchor" href="#workflow-analysis"><span class="octicon octicon-link"></span></a>Workflow analysis</h2>
+
+<p>All the commands should be executed from the <code>deploy</code> directory.</p>
+
+<h3>
+<a name="defining-workflows" class="anchor" href="#defining-workflows"><span class="octicon octicon-link"></span></a>Defining Workflows</h3>
+
+<p>A sample workflow, which was used for the IEEE Conference Paper, is included. It loads the workflow specification from plain-text files in the <code>ieee/inputs</code> directory. Every line of these files contains a separate node in the workflow. The data source is defined in <code>deploy/ieee_test_workflow.py</code>.</p>
+
+<h3>
+<a name="generating-random-workflows" class="anchor" href="#generating-random-workflows"><span class="octicon octicon-link"></span></a>Generating random workflows</h3>
+
+<p><code>python generator.py N</code> generates a random sequential workflow with N nodes (with replacement). It uses the nodes list in <code>eg/planetlab/nodes.txt</code> as a source. The workflow specification will be printed to <em>STDOUT</em>. </p>
+
+<p>For example, if a new workflow should be generated for the sample workflow, the following command could be used:</p>
+
+<pre><code>python generator.py 5 &gt; ../ieee/inputs/wf1.txt
+</code></pre>
+
+<h3>
+<a name="running-the-preanalysis-tool" class="anchor" href="#running-the-preanalysis-tool"><span class="octicon octicon-link"></span></a>Running the preanalysis tool</h3>
+
+<p><code>python ieee_analyzer.py WF.txt</code> runs the workflow specified in <code>ieee/inputs/WF.txt</code>. All logs are displayed in <em>STDERR</em>. <em>STDOUT</em> is automatically redirected to <code>ieee/outputs/WF.txt_pre</code>. This file contains the output of the analysis tool.</p>
+
+<p>For example, if the workflow generated above should be analysed, the following command could be used:</p>
+
+<pre><code>python ieee_analyzer.py wf1.txt
+</code></pre>
+
+<p>The result table can then be found in <code>ieee/outputs/wf1.txt_pre</code>.</p>
+
+<h3>
+<a name="executing-the-workflow" class="anchor" href="#executing-the-workflow"><span class="octicon octicon-link"></span></a>Executing the workflow</h3>
+
+<p><code>python ieee_runner.py WF.txt REGION1,REGION2,..</code> runs the workflow specified in <code>ieee/inputs/WF.txt</code> in AWS EC2 regions REGION1 and REGION2. Similarly to the analysis tool, logs are displayed in <em>STDERR</em> and <em>STDOUT</em> is redirected to <code>ieee/outputs/WF.txt_output</code>.</p>
+
+<p>For example, if the workflow generated above should be executed in the regions <em>us-east-1</em> and <em>us-west-2</em> and timed, the following command could be used:</p>
+
+<pre><code>python ieee_runner.py wf1.txt us-east-1,us-west-2
+</code></pre>
+
+<p>The result table can then be found in <code>ieee/outputs/wf1.txt_output</code>.</p>
+
+<h2>
+<a name="running-unit-tests" class="anchor" href="#running-unit-tests"><span class="octicon octicon-link"></span></a>Running unit tests</h2>
+
+<p>Unit tests for the DAG implementation were written using the <em>testify</em> framework. The tests can be invoked by simply running this command from the root directory:</p>
+
+<pre><code>testify tests
+</code></pre>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Moving Data maintained by <a href="https://github.com/optiminimalist">optiminimalist</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
