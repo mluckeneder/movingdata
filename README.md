@@ -1,4 +1,5 @@
-# Uncovering the Perfect Place: Optimising Workflow Engine Deployment in the Cloud
+# Location, Location, Location: Data-Intensive Distributed Computing in the Cloud.
+To appear in [IEEE CloudCom 2013](http://2013.cloudcom.org/). 
 
 ## Technology overview
 **Amazon AWS** is used to host the workflow orchestrator and run the analysis tools.
